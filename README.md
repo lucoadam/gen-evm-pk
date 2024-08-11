@@ -4,12 +4,14 @@ The following script generates a specified number of private keys and adds them 
 
 ```python3 add_to_metamask.py -n 10```
 
+The script will generate 10 private keys and add them to Metamask also save them to a file named `wallet.csv`.
+
 # Generate Private Keys (only)
 The following script generates a specified number of private keys, EVM Address, Aptos Address and saves them to a file.
 
 ```python3 generate_keys.py -n 10```
 
-The script will generate 10 private keys and print them to the console and save them to a file named `accounts.csv`.
+The script will generate 10 private keys and print them to the console and save them to a file named `generated.csv`.
 
 ## Dependencies
 - Python 3.6 or higher
