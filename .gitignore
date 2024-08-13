@@ -1,2 +1,6 @@
 venv/
 *.csv
+
+node_modules/
+last-wallet-index.txt
+.env
