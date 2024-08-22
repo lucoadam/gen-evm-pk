@@ -16,5 +16,5 @@ module.exports = {
     "USDC",
     "USDC"
   ),
-  RPC: "https://mevm.devnet.imola.movementlabs.xyz",
+  RPC: "https://mevm2.devnet.imola.movementlabs.xyz",
 };

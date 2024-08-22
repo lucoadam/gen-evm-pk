@@ -16,7 +16,9 @@ const transferBalance = async (wallet, to) => {
   console.log(`Transferring balance to ${to}`);
   const balance = await wallet.getBalance();
   if (balance.lt(ethers.utils.parseEther("0.2"))) {
-    throw new Error("Main wallet has Insufficient balance. Please top up the main wallet");
+    throw new Error(
+      "Main wallet has Insufficient balance. Please top up the main wallet"
+    );
   }
   const tx = await wallet.sendTransaction({
     to,
@@ -36,7 +38,9 @@ const withdrawAllBalance = async (wallet, to) => {
   const gasPrice = ethers.utils.parseUnits("5", "gwei");
   const gasLimit = 21000;
   const fee = gasPrice.mul(gasLimit);
-  const balanceAfterFee = balance.sub(fee).sub(ethers.utils.parseUnits("0.001", "ether"));
+  const balanceAfterFee = balance
+    .sub(fee)
+    .sub(ethers.utils.parseUnits("0.001", "ether"));
   const tx = await wallet.sendTransaction({
     to,
     value: balanceAfterFee,
@@ -45,7 +49,7 @@ const withdrawAllBalance = async (wallet, to) => {
   });
   await tx.wait();
   console.log("Withdraw Tx: ", tx.hash);
-}
+};
 
 const main = async () => {
   const mainWallet = new ethers.Wallet.fromMnemonic(
@@ -58,17 +62,35 @@ const main = async () => {
   if (fs.existsSync("last-wallet-index.txt")) {
     start = Number(fs.readFileSync("last-wallet-index.txt", "utf8")) + 1;
   }
+  if (start === 0) {
+    console.log("Generating wallets...");
+    let allWallets = "PrivateKey,WalletAddress\n";
+    for (let i = 0; i < totalWallets; i++) {
+      console.log("Generating wallet: ", i);
+      const nextWallet = new ethers.Wallet.fromMnemonic(
+        process.env.MNEMONIC,
+        `m/44'/60'/0'/0/${i}`
+      );
+      allWallets += `${nextWallet.privateKey},${nextWallet.address}\n`;
+    }
+    fs.writeFileSync("wallets.csv", allWallets);
+    console.log("Wallets generated and saved in wallets.csv");
+  }
+
   for (let i = start; i < totalWallets; i++) {
     const mainWalletBalance = await mainWallet.getBalance();
     const nextWallet = new ethers.Wallet.fromMnemonic(
       process.env.MNEMONIC,
       `m/44'/60'/0'/0/${i}`
     ).connect(provider);
-    
+
     console.log("\n========================================");
     console.log(`Wallet Index: ${i}`);
     console.log("Next Wallet: ", nextWallet.address);
-    console.log("Main Wallet balance: ", ethers.utils.formatEther(mainWalletBalance));
+    console.log(
+      "Main Wallet balance: ",
+      ethers.utils.formatEther(mainWalletBalance)
+    );
     // Transfer balance
     await transferBalance(mainWallet, nextWallet.address);
 
