@@ -12,7 +12,7 @@
   "dependencies": {
     "@uniswap/router-sdk": "^1.6.0",
     "@uniswap/sdk-core": "^5.3.1",
-    "@warpgatex/warpgate-sdk-v3": "^3.0.0",
+    "@warpgatex/warpgate-sdk-v3": "^3.0.3",
     "bignumber.js": "^9.1.2",
     "ethers": "5.7"
   }
