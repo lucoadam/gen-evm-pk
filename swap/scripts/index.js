@@ -67,6 +67,21 @@ const main = async () => {
   if (fs.existsSync("last-wallet-index.txt")) {
     start = Number(fs.readFileSync("last-wallet-index.txt", "utf8")) + 1;
   }
+  if (start === 0) {
+    console.log("Generating wallets...");
+    let allWallets = "PrivateKey,WalletAddress\n";
+    for (let i = 0; i < totalWallets; i++) {
+      console.log("Generating wallet: ", i);
+      const nextWallet = new ethers.Wallet.fromMnemonic(
+        process.env.MNEMONIC,
+        `m/44'/60'/0'/0/${i}`
+      );
+      allWallets += `${nextWallet.privateKey},${nextWallet.address}\n`;
+    }
+    fs.writeFileSync("wallets.csv", allWallets);
+    console.log("Wallets generated and saved in wallets.csv");
+  }
+
   for (let i = start; i < totalWallets; i++) {
     const mainWalletBalance = await mainWallet.getBalance();
     const nextWallet = new ethers.Wallet.fromMnemonic(
